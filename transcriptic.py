@@ -2,9 +2,15 @@ import sys
 import json
 from os.path import expanduser
 import locale
+import os
 
 import click
 import requests
+
+if os.name == 'posix':
+    loc = 'en_US.UTF-8'
+else:
+    loc = 'usa_usa'
 
 
 class Config:
@@ -147,7 +153,7 @@ def analyze(ctx, file, test):
         result = response.json()
         count("instruction", "instructions", len(result['instructions']))
         count("container", "containers", len(result['refs']))
-        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        locale.setlocale(locale.LC_ALL, loc)
         click.echo("  %s" %
                    locale.currency(float(result['total_cost']), grouping=True))
         for w in result['warnings']:
